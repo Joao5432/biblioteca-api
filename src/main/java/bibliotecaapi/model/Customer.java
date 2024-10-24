@@ -22,7 +22,9 @@ public class Customer implements Serializable{
     private BigDecimal state;
     private String country;
     private LocalDate birthDate;
+    private Status status;
 
+    
     public Customer() {}
 
     public Customer(Long id) {
@@ -91,6 +93,14 @@ public class Customer implements Serializable{
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
