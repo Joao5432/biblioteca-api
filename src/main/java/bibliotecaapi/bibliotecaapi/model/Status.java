@@ -1,5 +1,5 @@
 package bibliotecaapi.bibliotecaapi.model;
 
 public enum Status {
-    AVAILABLE, BORROWED;
+    AVAILABLE, BORROWED, ACTIVE, INACTIVE;
 }
