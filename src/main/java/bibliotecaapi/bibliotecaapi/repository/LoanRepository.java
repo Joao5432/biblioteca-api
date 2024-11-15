@@ -9,5 +9,4 @@ import bibliotecaapi.bibliotecaapi.model.Loan;
 
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
-    public Optional<List<Loan>> findByPublishedDate(String publishedDate);
 }

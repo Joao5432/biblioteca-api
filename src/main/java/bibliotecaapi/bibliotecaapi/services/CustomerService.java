@@ -3,52 +3,32 @@ package bibliotecaapi.bibliotecaapi.services;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import bibliotecaapi.bibliotecaapi.dto.CustomerDTO;
 import bibliotecaapi.bibliotecaapi.model.Customer;
-
-//import java.util.List;
-
+import bibliotecaapi.bibliotecaapi.model.Status;
 import bibliotecaapi.bibliotecaapi.repository.CustomerRepository;
-import lombok.NonNull;
 
+@Service
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
+    @Autowired private CustomerRepository repository;
 
-    public CustomerService(){
+    public CustomerDTO create(CustomerDTO dto){
+        Customer model = new Customer();
+       model.setName(dto.getName());
+       model.setLastname(dto.getLastname());
+       model.setAddress(dto.getAddress());
+       model.setCity(dto.getCity());
+        repository.save(model);
 
-    }
-
-    public Optional<Customer> find(Long id){
-        return customerRepository.findById(id.longValue());
-    }
-
-    public Optional<Customer> findByName(String name) {
-        return customerRepository.findByName(name);
-    }
-
-    public Optional<Customer> findByBirthDate(LocalDate birthDate){
-        return customerRepository.findByBirthDate(birthDate);
-    }
-
-    public void create(@NonNull Customer customer){
-        customerRepository.save(customer);
+        return dto;
     }   
     
-    public Boolean delete(@NonNull Long id){
-        if (customerRepository.existsById(id)){
-            customerRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
 
-    public Boolean update(@NonNull Customer customer){
-        if (customerRepository.existsById(customer.getId().longValue())){
-            customerRepository.save(customer);            
-            return true;
-        }
-        return false;
-    }
 }
 
 

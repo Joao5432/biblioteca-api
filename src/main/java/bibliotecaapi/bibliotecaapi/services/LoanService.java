@@ -11,24 +11,7 @@ import lombok.NonNull;
 
 public class LoanService {
 
-    @Autowired
-    private LoanRepository loanRepository;
-
-    public LoanService(){
-
-    }
-
-    public Optional<Loan> find(Long id){
-        return loanRepository.findById(id.longValue());
-    }
-
-    public Optional<List<Loan>> findByPublishedDate(String publishedDate) {
-        return loanRepository.findByPublishedDate(publishedDate);
-    }
-
-    public void create(@NonNull Loan loan) {
-        loanRepository.save(loan);
-    }
+   
 
     
 }
