@@ -1,3 +1,4 @@
+
 package bibliotecaapi.bibliotecaapi.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,3 @@ public class LoanService {
     }  
     
 }
-
-    
-

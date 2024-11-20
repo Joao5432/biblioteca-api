@@ -38,3 +38,4 @@ public class LoanDTO {
     private Status status;
 
 }
+

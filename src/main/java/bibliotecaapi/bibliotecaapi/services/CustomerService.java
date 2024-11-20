@@ -7,11 +7,16 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import bibliotecaapi.bibliotecaapi.dto.BookDTO;
 import bibliotecaapi.bibliotecaapi.dto.CustomerDTO;
 import bibliotecaapi.bibliotecaapi.dto.CustomerPatchDTO;
 import bibliotecaapi.bibliotecaapi.dto.LoanDTO;
+import bibliotecaapi.bibliotecaapi.model.Book;
 import bibliotecaapi.bibliotecaapi.model.Customer;
 import bibliotecaapi.bibliotecaapi.model.Loan;
 import bibliotecaapi.bibliotecaapi.model.Status;
@@ -34,8 +39,15 @@ public class CustomerService {
         return dto;
     }
 
-    public List<Customer> FindAll() {
-        return repository.findAll();
+    public Page<CustomerDTO> FindAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Customer> customers = repository.findAll(pageable);
+
+        return customers.map(customer -> {
+            CustomerDTO dto = new CustomerDTO();
+            BeanUtils.copyProperties(customer, dto);
+            return dto;
+        });
     }
 
     public Optional<CustomerDTO> findById(Long id) {
@@ -125,5 +137,4 @@ public class CustomerService {
 
 
 }
-
 

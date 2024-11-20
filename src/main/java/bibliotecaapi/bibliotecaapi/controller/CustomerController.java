@@ -44,9 +44,7 @@ public class CustomerController{
                                             @RequestParam(required = false) String nome,
                                             @RequestParam(required = false) LocalDate dataNascimento) {    
         if (id != null) {
-            return service.findById(id)
-                    .map(dto -> ResponseEntity.ok().body(dto))
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+            return ResponseEntity.ok().body(service.findById(id));
         } else if (nome != null) {
             List<CustomerDTO> customers = service.findByNome(nome);
             if (!customers.isEmpty()) {
@@ -62,7 +60,7 @@ public class CustomerController{
                 return ResponseEntity.noContent().build();
             }
         }
-        return ResponseEntity.badRequest().body("Informe pelo menos um parâmetro de busca.");
+        return ResponseEntity.ok().body(service.FindAll(0, 10));
     }
 
     @GetMapping("{id}/loans")
