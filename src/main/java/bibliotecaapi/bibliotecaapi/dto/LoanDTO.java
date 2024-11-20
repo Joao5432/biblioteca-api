@@ -7,14 +7,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import bibliotecaapi.bibliotecaapi.model.Book;
 import bibliotecaapi.bibliotecaapi.model.Customer;
-import bibliotecaapi.bibliotecaapi.model.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoanDTO {
@@ -33,8 +34,5 @@ public class LoanDTO {
 
     @JsonFormat (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDate publishedDate;
-
-    @NotNull (message = "Situação requirida")
-    private Status status;
 
 }
