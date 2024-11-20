@@ -2,9 +2,6 @@ package bibliotecaapi.bibliotecaapi.controller;
 
 import bibliotecaapi.bibliotecaapi.services.BookService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/books")
-public class BookController {
+public class BookController{
 
     @Autowired BookService service;
-    
+
     @PostMapping
-	public ResponseEntity<BookDTO> post(@RequestBody @Valid BookDTO book) {
+	public ResponseEntity<BookDTO> post(@RequestBody BookDTO book) {
         try {
             return ResponseEntity.ok().body(service.create(book)) ;
         } catch (Exception e) {

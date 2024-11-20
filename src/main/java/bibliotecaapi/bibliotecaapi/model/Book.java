@@ -3,6 +3,8 @@ package bibliotecaapi.bibliotecaapi.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,5 +26,6 @@ public class Book{
     private String author;
     private String isbn;
     private LocalDate publishedDate;
+    @Enumerated(EnumType.STRING)
     private Status status;
 }

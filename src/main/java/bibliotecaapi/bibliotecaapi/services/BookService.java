@@ -1,3 +1,4 @@
+
 package bibliotecaapi.bibliotecaapi.services;
 
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class BookService {
             BeanUtils.copyProperties(model, dto,"status");
             return dto;
         }
-
+        
         throw new EntityNotFoundException("Livro não encontrado");
     }
 
@@ -91,6 +92,6 @@ public class BookService {
         }
         throw new EntityNotFoundException("Livro não encontrado");
     }
-
+    
 
 }

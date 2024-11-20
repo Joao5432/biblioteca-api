@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LoanDatePatchDTO {
 
-    @JsonFormat (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate publishedDate;
 
 }

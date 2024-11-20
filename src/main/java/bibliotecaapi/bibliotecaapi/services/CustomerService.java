@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import bibliotecaapi.bibliotecaapi.dto.CustomerDTO;
@@ -34,8 +37,15 @@ public class CustomerService {
         return dto;
     }
 
-    public List<Customer> FindAll() {
-        return repository.findAll();
+    public Page<CustomerDTO> FindAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Customer> customers = repository.findAll(pageable);
+
+        return customers.map(customer -> {
+            CustomerDTO dto = new CustomerDTO();
+            BeanUtils.copyProperties(customer, dto);
+            return dto;
+        });
     }
 
     public Optional<CustomerDTO> findById(Long id) {
@@ -70,14 +80,26 @@ public class CustomerService {
     }
 
     public List<LoanDTO> findLoansByCustomer(Long id) {
-        List<Loan> loans = loanRepository.findAllByCustomer_Id(id);
-        List<LoanDTO> dtos = new ArrayList<>();
-        for (Loan loan : loans) {
-            LoanDTO dto = new LoanDTO();
-            BeanUtils.copyProperties(loan, dtos);
-            dtos.add(dto);
-        }
-        return dtos;
+        // Recupera a lista de empréstimos do cliente
+    List<Loan> loans = loanRepository.findAllByCustomer_Id(id);
+    List<LoanDTO> dtos = new ArrayList<>();
+
+    // Para cada empréstimo, criamos o DTO
+    for (Loan loan : loans) {
+        LoanDTO dto = new LoanDTO();
+        
+        // Copia as propriedades de Loan para o DTO
+        BeanUtils.copyProperties(loan, dto, "books", "customer"); // Não copia books e customer diretamente
+        
+        // Agora preenche manualmente as propriedades aninhadas
+        dto.setCustomer(loan.getCustomer()); // Preenche o cliente
+        dto.setBooks(loan.getBooks()); // Preenche os livros
+        
+        // Adiciona o DTO à lista
+        dtos.add(dto);
+    }
+    
+    return dtos;
     }
 
     public void delete(Long id) {
@@ -125,5 +147,4 @@ public class CustomerService {
 
 
 }
-
 
