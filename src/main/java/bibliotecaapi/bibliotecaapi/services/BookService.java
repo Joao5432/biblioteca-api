@@ -4,44 +4,26 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import bibliotecaapi.bibliotecaapi.dto.BookDTO;
 import bibliotecaapi.bibliotecaapi.model.Book;
 import bibliotecaapi.bibliotecaapi.repository.BookRepository;
 import io.micrometer.common.lang.NonNull;
 
+@Service
 public class BookService {
 
-    @Autowired
-    private BookRepository bookRepository;
-    
-    public BookService(){
+    @Autowired private BookRepository repository;
 
-    }
+    public BookDTO create(BookDTO dto){
+        Book model = new Book();
+        model.setTitle(dto.getTitle());
+        model.setAuthor(dto.getAuthor());
+        model.setIsbn(dto.getIsbn());
+        model.setPublishedDate(dto.getPublishedDate());
+        repository.save(model);
 
-    public List<Book> findAll(){
-        return bookRepository.findAll();
-    }
-
-    public Optional<Book> find(Long id){
-        return bookRepository.findById(id.longValue());
-    }
-
-    public void create(@NonNull Book book) {
-        bookRepository.save(book);
-    }
-
-    public Boolean delete(@NonNull Long id){
-        if (bookRepository.existsById(id)){
-            return true;
-        }
-        return false;
-    }
-
-    public Boolean update(@NonNull Book book){
-        if (bookRepository.existsById(book.getId().longValue())) {
-            bookRepository.save(book);
-            return true;
-        }
-        return false;
-    }
+        return dto;
+    }   
 }

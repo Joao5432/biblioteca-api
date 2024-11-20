@@ -1,6 +1,9 @@
 package bibliotecaapi.bibliotecaapi.controller;
 
 import java.time.LocalDate;
+import bibliotecaapi.bibliotecaapi.services.LoanService;
+import org.springframework.beans.factory.annotation.Autowired;
+import bibliotecaapi.bibliotecaapi.dto.LoanDTO;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,29 +22,15 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RequestMapping("/loans")
 public class LoanController{
 
-
-    @GetMapping(value = "/{customer}", produces = "application/json")
-    public ResponseEntity<Loan> getByCustomer(@PathVariable("customer") Customer customer) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByCustomer'");
-    }
-
-  
-    @GetMapping(value = "/{publishedDate}", produces = "application/json")
-    public ResponseEntity<Loan> getByDate(@PathVariable("publishedDate") LocalDate publishedDate) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByDate'");
-    }
+    @Autowired LoanService service;
 
     @PostMapping
-	@Operation(summary = "Cria um empréstimo")
-    public ResponseEntity<Loan> post(Loan loan) {
-        throw new UnsupportedOperationException("Unimplemented method 'post'");
+	public ResponseEntity<LoanDTO> post(@RequestBody LoanDTO loan) {
+        try {
+            return ResponseEntity.ok().body(service.create(loan)) ;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
-    @PatchMapping
-	@Operation(summary = "Atualiza um empréstimo") 
-    public ResponseEntity<Loan> patch(@RequestBody Loan loan) {
-        throw new UnsupportedOperationException("Unimplemented method 'patch'");
-    }
-
     
 }
