@@ -23,13 +23,17 @@ public class LoanService {
     @Autowired private LoanRepository repository;
 
     public LoanDTO create(LoanDTO dto){
-        //if (!repository.findAllByCustomer_Id().isEmpty())
+        if (!repository.findAllByCustomer_Id(dto.getCustomer().getId()).isEmpty()) {
             Loan loan = new Loan();
             BeanUtils.copyProperties(dto, loan); 
             loan.setStatus(Status.BORROWED);
             Loan savedLoan = repository.save(loan);
             BeanUtils.copyProperties(savedLoan, dto);
             return dto;
+        }      
+        else {
+            return null;
+        }
     }
 
     public Optional<LoanDTO> findById(Long id) {
