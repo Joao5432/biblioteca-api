@@ -2,6 +2,7 @@ package bibliotecaapi.bibliotecaapi.controller;
 
 import bibliotecaapi.bibliotecaapi.services.BookService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,8 +25,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public ResponseEntity<BookDTO> post(@RequestBody BookDTO book) {
+@RequestMapping("/books")
+public class BookController {
+
+    @Autowired BookService service;
+    
+    @PostMapping
+	public ResponseEntity<BookDTO> post(@RequestBody @Valid BookDTO book) {
+        try {
+            return ResponseEntity.ok().body(service.create(book)) ;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
+    }
 
     @GetMapping("{id}")
     public ResponseEntity<BookDTO> findyById(@PathVariable("id") Long id){
@@ -74,3 +86,4 @@ public ResponseEntity<BookDTO> post(@RequestBody BookDTO book) {
         }
     } 
 
+}
