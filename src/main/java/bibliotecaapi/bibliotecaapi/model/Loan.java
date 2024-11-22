@@ -30,9 +30,7 @@ public class Loan {
     private Customer customer;
     @ManyToAny
     private List<Book> books;
-    private String author;
-    private String isbn;
-    private LocalDate publishedDate;
+    private LocalDate loanDate;
     @Enumerated(EnumType.STRING)
     private Status status;
 

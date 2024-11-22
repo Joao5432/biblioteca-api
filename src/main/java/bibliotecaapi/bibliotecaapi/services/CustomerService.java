@@ -12,11 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import bibliotecaapi.bibliotecaapi.dto.BookDTO;
 import bibliotecaapi.bibliotecaapi.dto.CustomerDTO;
 import bibliotecaapi.bibliotecaapi.dto.CustomerPatchDTO;
 import bibliotecaapi.bibliotecaapi.dto.LoanDTO;
-import bibliotecaapi.bibliotecaapi.model.Book;
 import bibliotecaapi.bibliotecaapi.model.Customer;
 import bibliotecaapi.bibliotecaapi.model.Loan;
 import bibliotecaapi.bibliotecaapi.model.Status;
