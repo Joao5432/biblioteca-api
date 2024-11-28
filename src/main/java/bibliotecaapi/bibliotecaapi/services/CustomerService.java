@@ -80,14 +80,26 @@ public class CustomerService {
     }
 
     public List<LoanDTO> findLoansByCustomer(Long id) {
-        List<Loan> loans = loanRepository.findAllByCustomer_Id(id);
-        List<LoanDTO> dtos = new ArrayList<>();
-        for (Loan loan : loans) {
-            LoanDTO dto = new LoanDTO();
-            BeanUtils.copyProperties(loan, dtos);
-            dtos.add(dto);
-        }
-        return dtos;
+        // Recupera a lista de empréstimos do cliente
+    List<Loan> loans = loanRepository.findAllByCustomer_Id(id);
+    List<LoanDTO> dtos = new ArrayList<>();
+
+    // Para cada empréstimo, criamos o DTO
+    for (Loan loan : loans) {
+        LoanDTO dto = new LoanDTO();
+        
+        // Copia as propriedades de Loan para o DTO
+        BeanUtils.copyProperties(loan, dto, "books", "customer"); // Não copia books e customer diretamente
+        
+        // Agora preenche manualmente as propriedades aninhadas
+        dto.setCustomer(loan.getCustomer()); // Preenche o cliente
+        dto.setBooks(loan.getBooks()); // Preenche os livros
+        
+        // Adiciona o DTO à lista
+        dtos.add(dto);
+    }
+    
+    return dtos;
     }
 
     public void delete(Long id) {

@@ -1,9 +1,12 @@
 package bibliotecaapi.bibliotecaapi.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.ManyToAny;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,6 +33,7 @@ public class Loan {
     private Customer customer;
     @ManyToAny
     private List<Book> books;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate loanDate;
     @Enumerated(EnumType.STRING)
     private Status status;

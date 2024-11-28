@@ -65,11 +65,16 @@ public class CustomerController{
 
     @GetMapping("{id}/loans")
     public ResponseEntity<List<LoanDTO>> findLoans(@PathVariable("id") Long id){ 
-        List<LoanDTO> loans = service.findLoansByCustomer(id);
-        if (!loans.isEmpty()) {
-            return ResponseEntity.ok().body(service.findLoansByCustomer(id));
-        }
-        return ResponseEntity.notFound().build();
+        // Recupera os empréstimos do cliente
+    List<LoanDTO> loans = service.findLoansByCustomer(id);
+    
+    // Se houver empréstimos, retorna a lista com sucesso
+    if (!loans.isEmpty()) {
+        return ResponseEntity.ok().body(loans);
+    }
+    
+    // Caso contrário, retorna uma resposta 404
+    return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{id}")

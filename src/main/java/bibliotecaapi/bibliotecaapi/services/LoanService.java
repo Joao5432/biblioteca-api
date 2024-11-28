@@ -1,6 +1,7 @@
 package bibliotecaapi.bibliotecaapi.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,49 +34,51 @@ public class LoanService {
     @Transactional
     public LoanDTO create(LoanRequestDto request) {
         // Verifica se o número de livros é válido
-        List<Long> idBooks = request.getIdBooks();
-        if (idBooks.size() > 2) {
-            throw new EntityNotFoundException("Só pode emprestar até 2 livros por vez");
-        }
-        
-        // Recupera os livros solicitados pelo ID
-        List<Book> books = bookRepository.findAllById(idBooks);
-        if (books.isEmpty()) {
-            throw new EntityNotFoundException("Livros não encontrados");
-        }
+    List<Long> idBooks = request.getIdBooks();
+    if (idBooks.size() > 2) {
+        throw new EntityNotFoundException("Só pode emprestar até 2 livros por vez");
+    }
+
+    // Recupera os livros solicitados pelo ID
+    List<Book> books = bookRepository.findAllById(idBooks);
+    if (books.isEmpty()) {
+        throw new EntityNotFoundException("Livros não encontrados");
+    }
+
+    // Verifica se o cliente existe e se não tem empréstimos ativos
+    Optional<Customer> optionalCustomer = customerRepository.findById(request.getIdCustumer());
+    if (!optionalCustomer.isPresent()) {
+        throw new EntityNotFoundException("Cliente não encontrado");
+    }
+
+    Customer customer = optionalCustomer.get();
+
+    // Verifica se o cliente já possui um empréstimo ativo
+    Optional<Loan> activeLoan = repository.findByCustomerAndStatus(customer, Status.BORROWED);
+    if (activeLoan.isPresent()) {
+        throw new IllegalStateException("O cliente já possui um empréstimo ativo.");
+    }
+
+    // Cria o novo empréstimo
+    Loan loan = new Loan();
+    loan.setBooks(books);
+    loan.setCustomer(customer);
+    loan.setLoanDate(LocalDate.now()); // Agora inclui a data e hora atual
+    loan.setStatus(Status.BORROWED);
+
+    // Atualiza o status dos livros para 'BORROWED'
+    books.forEach(book -> book.setStatus(Status.BORROWED));
+    bookRepository.saveAll(books);  // Salva os livros com o status atualizado
+
+    // Salva o empréstimo no repositório
+    Loan savedLoan = repository.save(loan);
+
+    // Cria e retorna o DTO de empréstimo
+    LoanDTO dto = new LoanDTO();
+    BeanUtils.copyProperties(savedLoan, dto, "id");
     
-        // Verifica se o cliente existe e se não tem empréstimos ativos
-        Optional<Customer> optionalCustomer = customerRepository.findById(request.getIdCustumer());
-        if (!optionalCustomer.isPresent()) {
-            throw new EntityNotFoundException("Cliente não encontrado");
-        }
-        
-        Customer customer = optionalCustomer.get();
-        
-        // Verifica se o cliente já possui um empréstimo ativo
-        Optional<Loan> activeLoan = repository.findByCustomerAndStatus(customer, Status.BORROWED);
-        if (activeLoan.isPresent()) {
-            throw new IllegalStateException("O cliente já possui um empréstimo ativo.");
-        }
-    
-        // Cria o novo empréstimo
-        Loan loan = new Loan();
-        loan.setBooks(books);
-        loan.setCustomer(customer);
-        loan.setLoanDate(LocalDate.now());
-        loan.setStatus(Status.BORROWED);
-    
-        // Atualiza o status dos livros para 'BORROWED'
-        books.forEach(book -> book.setStatus(Status.BORROWED));
-        bookRepository.saveAll(books);  // Salva os livros com o status atualizado
-    
-        // Salva o empréstimo no repositório
-        Loan savedLoan = repository.save(loan);
-        
-        // Cria e retorna o DTO de empréstimo
-        LoanDTO dto = new LoanDTO();
-        BeanUtils.copyProperties(savedLoan, dto, "id");
-        return dto;
+    // Agora o DTO de Loan inclui dados reais do Customer e dos Books
+    return dto;
     }
     
 
@@ -119,7 +122,7 @@ public class LoanService {
         
         if (optionalModel.isPresent()) {
             Loan model = optionalModel.get();
-            model.setLoanDate(LocalDate.now());
+            model.setLoanDate(dtoPatch.getPublishedDate());
             repository.save(model);
 
             LoanDTO dto = new LoanDTO();
